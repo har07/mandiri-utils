@@ -54,7 +54,7 @@ class Client(object):
         return string
 
     def get_token(self):
-        local_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + self.tz_offset
+        local_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.000T') + self.tz_offset
         data = "{}|{}".format(self.client_id, local_time)
 
         private_key = self.load_privatekey()
