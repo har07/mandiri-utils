@@ -8,7 +8,7 @@ setup(
   description = 'Helper package for requesting token and generating request signatures to be used for consuming Bank Mandiri API',
   author = 'Hanif Amal Robbani',       
   author_email = 'dev.har07@gmail.com',
-  url = 'github.com/har07',
+  url = 'https://github.com/har07',
   download_url = 'https://github.com/har07/mandiri-utils/archive/refs/tags/v_02.tar.gz', 
   keywords = ['banking', 'signature', 'token', 'mandiri'], 
   install_requires=[
