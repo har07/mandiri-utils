@@ -67,7 +67,7 @@ class Client(object):
             "Content-Type": "application/x-www-form-urlencoded",
         }
         params = {
-            "grantType":"client_credentials"
+            "grant_type":"client_credentials"
         }
         response = requests.post(
             f"{self.url}/openapi/auth/token", headers=req_headers, data=params
