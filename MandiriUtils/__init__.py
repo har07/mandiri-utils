@@ -1,1 +1,1 @@
-from MandiriUtils.Client import Client, LoginResult
+from MandiriUtils.Client import LoginClient, LoginResult, TransactionClient

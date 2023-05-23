@@ -17,7 +17,7 @@ class LoginResult(object):
         self.success = success
         self.message = message
 
-class Client(object):
+class LoginClient(object):
     def __init__(self, url, pk_pass, client_id, client_secret, pk_path='', pk='', tz_offset='+07:00') -> None:
         if pk_path == '' and pk == '':
             raise Exception("pk_path or pk is required")
@@ -30,35 +30,25 @@ class Client(object):
         self.client_secret = client_secret
         self.tz_offset = tz_offset
 
-    def load_privatekey(self):
+    def _load_privatekey_(self):
         if self.pk != '':
             return RSA.importKey(self.pk, self.pk_pass)
         return RSA.importKey(open(self.pk_path).read(), self.pk_pass)
 
 
-    def generate_signature(self, data, private_key):
+    def _generate_signature_(self, data, private_key):
         digest = SHA256.new()
         digest.update(str.encode(data))
         signer = PKCS1_v1_5.new(private_key)
         sign = signer.sign(digest)
         return b64encode(sign).decode()
-    
-    def transaction_signature(self, client_secret, message):
-        signature = hmac.new(
-            client_secret.encode(), message.encode(), hashlib.sha512
-        ).hexdigest()
-        return signature
-
-    def minified_data(self, data):
-        string = json.dumps(data, separators=(',', ':'))
-        return string
 
     def get_token(self):
         local_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.000T') + self.tz_offset
         data = "{}|{}".format(self.client_id, local_time)
 
-        private_key = self.load_privatekey()
-        signature = self.generate_signature(data, private_key)
+        private_key = self._load_privatekey_()
+        signature = self._generate_signature_(data, private_key)
 
         req_headers = {
             "X-Mandiri-Key": "{}".format(self.client_id),
@@ -77,3 +67,27 @@ class Client(object):
             return LoginResult(resp_data['accessToken'], local_time, signature)
         else:
             return LoginResult("", local_time, signature, False, response.text)
+
+class TransactionClient(object):
+    def __init__(self, client_secret, access_token) -> None:
+        self.client_secret = client_secret
+        self.token = access_token
+
+    def _transaction_signature_(self, client_secret, message):
+        signature = hmac.new(
+            client_secret.encode(), message.encode(), hashlib.sha512
+        ).hexdigest()
+        return signature
+
+    def _minified_data_(self, data):
+        string = json.dumps(data, separators=(',', ':'))
+        return string
+    
+    def get_signature(self, http_method, url_path, data, local_time):
+        jsonBodyRequest = self.minified_data(data)
+        message = "{}:{}:{}:{}:{}".format(
+            http_method, url_path, self.access_token, jsonBodyRequest, local_time
+        )
+        signature = self._transaction_signature_(self.client_secret, message)
+        return signature
+    
