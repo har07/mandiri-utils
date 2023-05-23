@@ -84,7 +84,7 @@ class TransactionClient(object):
         return string
     
     def get_signature(self, http_method, url_path, data, local_time):
-        jsonBodyRequest = self.minified_data(data)
+        jsonBodyRequest = self._minified_data_(data)
         message = "{}:{}:{}:{}:{}".format(
             http_method, url_path, self.access_token, jsonBodyRequest, local_time
         )
