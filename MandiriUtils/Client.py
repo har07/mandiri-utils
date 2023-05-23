@@ -71,7 +71,7 @@ class LoginClient(object):
 class TransactionClient(object):
     def __init__(self, client_secret, access_token) -> None:
         self.client_secret = client_secret
-        self.token = access_token
+        self.access_token = access_token
 
     def _transaction_signature_(self, client_secret, message):
         signature = hmac.new(
