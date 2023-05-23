@@ -61,7 +61,7 @@ class Client(object):
         signature = self.generate_signature(data, private_key)
 
         req_headers = {
-            "X-CLIENT-KEY": "{}".format(self.client_id),
+            "X-Mandiri-Key": "{}".format(self.client_id),
             "X-TIMESTAMP": "{}".format(local_time),
             "X-SIGNATURE": "{}".format(signature),
             "Content-Type": "application/x-www-form-urlencoded",
