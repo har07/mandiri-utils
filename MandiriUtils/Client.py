@@ -18,14 +18,20 @@ class LoginResult(object):
         self.message = message
 
 class Client(object):
-    def __init__(self, url, pk_path, pk_pass, client_id, client_secret) -> None:
+    def __init__(self, url, pk_pass, client_id, client_secret, pk_path='', pk='') -> None:
+        if pk_path == '' and pk == '':
+            raise Exception("pk_path or pk is required")
+        
         self.url = url
         self.pk_path = pk_path
+        self.pk = pk
         self.pk_pass = pk_pass
         self.client_id = client_id
         self.client_secret = client_secret
 
     def load_privatekey(self):
+        if self.pk != '':
+            return RSA.importKey(self.pk, self.pk_pass)
         return RSA.importKey(open(self.pk_path).read(), self.pk_pass)
 
 
