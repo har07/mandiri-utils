@@ -18,7 +18,7 @@ class LoginResult(object):
         self.message = message
 
 class Client(object):
-    def __init__(self, url, pk_pass, client_id, client_secret, pk_path='', pk='') -> None:
+    def __init__(self, url, pk_pass, client_id, client_secret, pk_path='', pk='', tz_offset='+07:00') -> None:
         if pk_path == '' and pk == '':
             raise Exception("pk_path or pk is required")
         
@@ -28,6 +28,7 @@ class Client(object):
         self.pk_pass = pk_pass
         self.client_id = client_id
         self.client_secret = client_secret
+        self.tz_offset = tz_offset
 
     def load_privatekey(self):
         if self.pk != '':
@@ -53,7 +54,7 @@ class Client(object):
         return string
 
     def get_token(self):
-        local_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S+07:00') 
+        local_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S') + self.tz_offset
         data = "{}|{}".format(self.client_id, local_time)
 
         private_key = self.load_privatekey()
