@@ -70,7 +70,7 @@ class Client(object):
             "grantType":"client_credentials"
         }
         response = requests.post(
-            f"{self.url}/openapi/auth/v2.0/access-token/b2b", headers=req_headers, data=params
+            f"{self.url}/openapi/auth/token", headers=req_headers, data=params
         )
         if response.status_code == 200:
             resp_data = response.json()
