@@ -75,4 +75,4 @@ class Client(object):
             resp_data = response.json()
             return LoginResult(resp_data['accessToken'], local_time, signature)
         else:
-            return LoginResult("", "", "", False, response.text)
+            return LoginResult("", local_time, signature, False, response.text)
